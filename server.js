@@ -1,9 +1,18 @@
-var express = require("express");
+var express = require("express"),
+	url = require("url"),
+	strftime = require("strftime");
 
 var app = express();
 
-app.get( "/", function(req, res) {
-	res.send("Hello, World!");
+app.get( "*", function(req, res) {
+	var dateRaw = url.parse(req.url, true),
+		time = dateRaw.path.substr(1),
+		intTime = parseInt(time) || 0;
+
+	if( intTime <= 31 ) intTime = Date.parse(decodeURI(time))/1000; 
+	
+	var date = new Date(intTime*1000);
+	res.json({unix: intTime, natural: strftime('%B %d, %Y', date)});
 });
 
 app.listen(8080, function() {
