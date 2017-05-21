@@ -12,7 +12,8 @@ app.get( "*", function(req, res) {
 	if( intTime <= 31 ) intTime = Date.parse(decodeURI(time))/1000; 
 	
 	var date = new Date(intTime*1000);
-	res.json({unix: intTime, natural: strftime('%B %d, %Y', date)});
+	if( intTime ) res.json({unix: intTime, natural: strftime('%B %d, %Y', date)});
+	else res.json({error: "Could't retrieve date from "+time+"."})
 });
 
 app.listen(8080, function() {
